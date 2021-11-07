@@ -48,11 +48,11 @@ public class PostRepository {
     }
 
     // 수정
-    public Post update(Post post) {
+    public void update(Post post, String title, String textContents) {
         Post updatePost = posts.get(post.getPostId());
-        updatePost.setTitle(post.getTitle());
-        updatePost.setTextContents(post.getTextContents());
-        return updatePost;
+        updatePost.setTextContents(textContents);
+        updatePost.setTitle(title);
+        posts.put(post.getPostId(), updatePost);
     }
 
     // 삭제

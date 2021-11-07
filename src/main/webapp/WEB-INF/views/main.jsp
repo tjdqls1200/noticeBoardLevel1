@@ -37,7 +37,7 @@
                         ${index + 1}
                     </td>
                     <td width="400">
-                        <a href="/noticeBoard/post/${postList.get(index).postId}">${postList.get(index).title}</a>
+                        <a href="/noticeBoard/read/${postList.get(index).postId}">${postList.get(index).title}</a>
                     </td>
                     <td>
                         ${postList.get(index).writer}

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static java.rmi.server.LogStream.log;
+
 @Controller
 @Slf4j
 public class PostController {
@@ -25,7 +27,7 @@ public class PostController {
     //새 게시글 작성페이지
     @GetMapping("/noticeBoard/newPost")
     public String newPost() {
-        log.info("ok");
+        PostController.log.info("ok");
         return "newPost";
     }
 
@@ -40,14 +42,14 @@ public class PostController {
         Post inputPost = new Post(title, writer, password, textContents);
         Post OutputPost = postRepository.save(inputPost);
 //        model.addAttribute("post", OutputPost);
-        log.info("ok2");
+        PostController.log.info("ok2");
 //        Post post = new Post(title, writer, password, textContents);
 //        model.addAttribute("post", post);
         return "redirect:/";
     }
 
     // 게시글 조회
-    @GetMapping("/noticeBoard/post/{postId}")
+    @GetMapping("/noticeBoard/read/{postId}")
     public String readPost(@PathVariable Long postId,
                            Model model) {
         postRepository.getPost(postId);
@@ -55,33 +57,53 @@ public class PostController {
         model.addAttribute("readPost", readPost);
         return "post";
     }
-    @GetMapping("/noticeBoard/updatePost/{postId}")
+
+    @GetMapping("/noticeBoard/update/{postId}")
     public String updatePost(@PathVariable Long postId,
                              Model model) {
         Post updatePost = postRepository.getPost(postId);
         model.addAttribute("updatePost", updatePost);
+
         return "updatePost";
     }
 
-    @PostMapping("/noticeBoard/updatePost/{postId}")
+    @PostMapping("/noticeBoard/update/{postId}")
     public String updatePost(@RequestParam String title,
                              @RequestParam String password,
                              @RequestParam String textContents,
                              @PathVariable Long postId,
                              Model model) {
         Post updatePost = postRepository.getPost(postId);
-        if (updatePost.getPassword().equals(password)) {
-            updatePost.setTitle(title);
-            updatePost.setTextContents(textContents);
+        if (!updatePost.getPassword().equals(password)) {
+            model.addAttribute("updatePost", updatePost);
+            return "updatePost";
         }
-        else {
-            // 비밀번호 틀릴시 임시
-            System.out.println("password error");
-        }
+        postRepository.update(updatePost, title, textContents);
         return "redirect:/";
     }
 
-//    public String deletePost() {
-//
-//    }
+    @GetMapping("/noticeBoard/delete/{postId}")
+    public String deletePost(@PathVariable Long postId,
+                             Model model) {
+        Post deletePost = postRepository.getPost(postId);
+        model.addAttribute("deletePost", deletePost);
+        PostController.log.info("error 0 point");
+        return "delete";
+    }
+
+    @PostMapping("/noticeBoard/delete/{postId}")
+    public String deletePost(@PathVariable Long postId,
+                             @RequestParam String password,
+                             Model model) {
+        Post deletePost = postRepository.getPost(postId);
+        PostController.log.info("error 1 point");
+        if (!deletePost.getPassword().equals(password)) {
+            model.addAttribute("deletePost", deletePost);
+            PostController.log.info("error 2 point");
+            return "delete";
+        }
+        PostController.log.info("error 3 point");
+        postRepository.delete(deletePost);
+        return "redirect:/";
+    }
 }

@@ -74,8 +74,11 @@
 <form action="/" method="get" style="width: 200px; height: 30px; text-align: center">
     <button type="submit">확인</button>
 </form>
-<form action="/noticeBoard/updatePost/${readPost.postId}" method="get" style="width: 200px; height: 30px; text-align: center">
+<form action="/noticeBoard/update/${readPost.postId}" method="get" style="width: 200px; height: 30px; text-align: center">
     <button type="submit">수정</button>
+</form>
+<form action="/noticeBoard/delete/${readPost.postId}" method="get" style="width: 200px; height: 30px; text-align: center">
+    <button type="submit">삭제</button>
 </form>
 </body>
 </html>
